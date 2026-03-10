@@ -59,3 +59,46 @@ claude-work
 ```
 
 Each account logs in independently and stores its credentials in its own directory (`~/.claude-personal-docker` or `~/.claude-work-docker`). After the first login, subsequent runs start immediately without re-authenticating.
+
+## YOLO Mode
+
+Set `YOLO=1` to run Claude Code with `--dangerously-skip-permissions`, which skips all permission prompts and lets Claude execute tools without confirmation.
+
+```bash
+claude-personal() {
+  local profile="personal"
+  docker run -it --rm \
+    -e YOLO=1 \
+    -v "$HOME/.claude-${profile}-docker:/home/claude/.claude" \
+    -v "$HOME/.claude-${profile}-docker.json:/home/claude/.claude.json" \
+    -v "$(pwd):/workspace" \
+    claude-code-docker:latest "$@"
+}
+```
+
+Default is `YOLO=0` (all permission checks enabled).
+
+## GitHub CLI
+
+The image includes [gh](https://cli.github.com/) so Claude can interact with pull requests, issues, and comments. Pass your GitHub token as an environment variable:
+
+```bash
+claude-personal() {
+  local profile="personal"
+  docker run -it --rm \
+    -e YOLO=0 \
+    -e GITHUB_TOKEN="$GITHUB_TOKEN" \
+    -v "$HOME/.claude-${profile}-docker:/home/claude/.claude" \
+    -v "$HOME/.claude-${profile}-docker.json:/home/claude/.claude.json" \
+    -v "$(pwd):/workspace" \
+    claude-code-docker:latest "$@"
+}
+```
+
+Set your token in your shell profile:
+
+```bash
+export GITHUB_TOKEN="ghp_your_token_here"
+```
+
+The `gh` CLI automatically uses the `GITHUB_TOKEN` env var for authentication — no `gh auth login` needed inside the container.
