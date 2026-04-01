@@ -68,3 +68,5 @@ Each account logs in independently and stores its credentials in its own directo
 |---|---|---|
 | `YOLO` | `0` | Set to `1` to run with `--dangerously-skip-permissions` (skips all permission prompts) |
 | `GITHUB_TOKEN` | — | GitHub personal access token for `gh` CLI (PR comments, issues, etc.) |
+| `GIT_USER_EMAIL` | — | Sets `user.email` for git commits inside the container |
+| `GIT_USER_NAME` | — | Sets `user.name` for git commits inside the container |
